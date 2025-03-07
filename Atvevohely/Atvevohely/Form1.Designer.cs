@@ -75,7 +75,7 @@
             this.Controls.Add(this.gyumolcsok);
             this.Controls.Add(this.termelok);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Gyümölcs átvevőhely";
             this.ResumeLayout(false);
 
         }

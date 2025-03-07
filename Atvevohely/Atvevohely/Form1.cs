@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Atvevohely.Properties;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -20,15 +21,46 @@ namespace Atvevohely
 
         public void clearButtons()
         {
-            termelok.Dispose();
-            atvetel.Dispose();
-            gyumolcsok.Dispose();
+            this.Controls.Clear();
         }
 
         private void termelok_Click(object sender, EventArgs e)
         {
             clearButtons();
 
+        }
+        private void start()
+        {
+            clearButtons();
+
+            Button termelok = new Button();
+            termelok.Location = new System.Drawing.Point(451, 36);
+            termelok.Text = "Termelők";
+            termelok.Size = new System.Drawing.Size(223, 64);
+            termelok.TabIndex = 0;
+            termelok.UseVisualStyleBackColor = true;
+            termelok.Click += termelok_Click;
+            this.Controls.Add( termelok );
+
+            Button gyumolcsok = new Button();
+            gyumolcsok.Location = new System.Drawing.Point(451, 172);
+            gyumolcsok.Name = "gyumolcsok";
+            gyumolcsok.Size = new System.Drawing.Size(223, 64);
+            gyumolcsok.TabIndex = 1;
+            gyumolcsok.Text = "Gyümölcsök";
+            gyumolcsok.UseVisualStyleBackColor = true;
+            gyumolcsok.Click += gyumolcsok_Click;
+            this.Controls.Add(gyumolcsok);
+
+            Button atvetel = new Button();
+            atvetel.Location = new System.Drawing.Point(451, 326);
+            atvetel.Name = "atvetel";
+            atvetel.Size = new System.Drawing.Size(223, 64);
+            atvetel.TabIndex = 2;
+            atvetel.Text = "Átvétel";
+            atvetel.UseVisualStyleBackColor = true;
+            atvetel.Click += atvetel_Click;
+            this.Controls.Add(atvetel);
         }
 
         private void gyumolcsok_Click(object sender, EventArgs e)
@@ -60,9 +92,15 @@ namespace Atvevohely
             hozzaad.Click += hozzaad_Click;
             this.Controls.Add(hozzaad);
 
+            Button vissza = new Button();
+            vissza.Text = "Vissza";
+            vissza.Location = new Point(630, 330);
+            vissza.Size = new Size(90, 30);
+            vissza.Click += visszaButton_Click;
+            this.Controls.Add(vissza);
+
             string filepath = "fruits.txt";
-            //string fruit = textBox.Text;
-            hozzaad.Tag = new { Text = textBox.Text, FilePath = filepath };
+            hozzaad.Tag = new { TextBox = textBox, FilePath = filepath };
             List<string> lines = new List<string>();
 
            
@@ -88,31 +126,51 @@ namespace Atvevohely
             Button button = sender as Button;
             var buttonInfo = button.Tag as dynamic;
 
-            // Extract file path and text from button.Tag
             string filepath = buttonInfo.FilePath;
-            string text = buttonInfo.Text;
+            string text = buttonInfo.TextBox.Text;
 
             try
             {
-                // Check if the file exists, if not, create it
                 if (!File.Exists(filepath))
                 {
-                    // Create a new file and close it immediately
                     File.Create(filepath).Close();
                 }
 
-                // Append the text to the file
-                using (StreamWriter sw = new StreamWriter(filepath, true)) // 'true' for appending
+                using (StreamWriter sw = new StreamWriter(filepath, true)) 
                 {
                     sw.WriteLine(text);
                 }
+                ListBox listBox = this.Controls.OfType<ListBox>().FirstOrDefault();
+                if (listBox != null)
+                {              
+                    listBox.Items.Clear();
 
-                MessageBox.Show("Text added successfully. "+text);
+                    List<string> lines = new List<string>();
+                    using (StreamReader reader = new StreamReader(filepath))
+                    {
+                        string line;
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            lines.Add(line);
+                        }
+                    }
+
+
+                    foreach (var line in lines)
+                    {
+                        listBox.Items.Add(line);
+                    }
+                }
+                MessageBox.Show("Sikeresen hozzáadva. ");
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Error: " + ex.Message);
             }
+        }
+        private void visszaButton_Click(object sender, EventArgs e)
+        {
+            start(); 
         }
 
 

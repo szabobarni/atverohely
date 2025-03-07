@@ -8,3 +8,13 @@ D:\Hártó Vince 12.i\Atvevohely\Atvevohely\obj\Debug\Atvevohely.csproj.Generate
 D:\Hártó Vince 12.i\Atvevohely\Atvevohely\obj\Debug\Atvevohely.csproj.CoreCompileInputs.cache
 D:\Hártó Vince 12.i\Atvevohely\Atvevohely\obj\Debug\Atvevohely.exe
 D:\Hártó Vince 12.i\Atvevohely\Atvevohely\obj\Debug\Atvevohely.pdb
+D:\Szabo Barnabas 11.i\atverohely\Atvevohely\Atvevohely\bin\Debug\Atvevohely.exe.config
+D:\Szabo Barnabas 11.i\atverohely\Atvevohely\Atvevohely\bin\Debug\Atvevohely.exe
+D:\Szabo Barnabas 11.i\atverohely\Atvevohely\Atvevohely\bin\Debug\Atvevohely.pdb
+D:\Szabo Barnabas 11.i\atverohely\Atvevohely\Atvevohely\obj\Debug\Atvevohely.csproj.AssemblyReference.cache
+D:\Szabo Barnabas 11.i\atverohely\Atvevohely\Atvevohely\obj\Debug\Atvevohely.Form1.resources
+D:\Szabo Barnabas 11.i\atverohely\Atvevohely\Atvevohely\obj\Debug\Atvevohely.Properties.Resources.resources
+D:\Szabo Barnabas 11.i\atverohely\Atvevohely\Atvevohely\obj\Debug\Atvevohely.csproj.GenerateResource.cache
+D:\Szabo Barnabas 11.i\atverohely\Atvevohely\Atvevohely\obj\Debug\Atvevohely.csproj.CoreCompileInputs.cache
+D:\Szabo Barnabas 11.i\atverohely\Atvevohely\Atvevohely\obj\Debug\Atvevohely.exe
+D:\Szabo Barnabas 11.i\atverohely\Atvevohely\Atvevohely\obj\Debug\Atvevohely.pdb
