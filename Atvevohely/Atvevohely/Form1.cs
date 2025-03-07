@@ -23,12 +23,6 @@ namespace Atvevohely
         {
             this.Controls.Clear();
         }
-
-        private void termelok_Click(object sender, EventArgs e)
-        {
-            clearButtons();
-
-        }
         private void start()
         {
             clearButtons();
@@ -40,7 +34,7 @@ namespace Atvevohely
             termelok.TabIndex = 0;
             termelok.UseVisualStyleBackColor = true;
             termelok.Click += termelok_Click;
-            this.Controls.Add( termelok );
+            this.Controls.Add(termelok);
 
             Button gyumolcsok = new Button();
             gyumolcsok.Location = new System.Drawing.Point(451, 172);
@@ -62,7 +56,63 @@ namespace Atvevohely
             atvetel.Click += atvetel_Click;
             this.Controls.Add(atvetel);
         }
+        private void termelok_Click(object sender, EventArgs e)
+        {
+            clearButtons();
+            Label text = new Label();
+            text.Text = "Termelők";
+            text.Location = new Point(20, 20);
+            text.BackColor = Color.White;
+            text.Size = new Size(400, 100);
+            text.Font = new Font("Arial", 40, FontStyle.Bold);
+            this.Controls.Add(text);
 
+            ListBox listBox = new ListBox();
+            listBox.Location = new Point(520, 123);
+            listBox.Size = new Size(200, 200);
+            this.Controls.Add(listBox);
+
+            TextBox textBox = new TextBox();
+            textBox.Location = new Point(520, 60);
+            textBox.AutoSize = false;
+            textBox.Size = new Size(100, 28);
+            this.Controls.Add(textBox);
+
+            Button hozzaad = new Button();
+            hozzaad.Location = new Point(630, 59);
+            hozzaad.Size = new Size(90, 30);
+            hozzaad.Text = "Hozzáadás";
+            hozzaad.Click += hozzaad_Click;
+            this.Controls.Add(hozzaad);
+
+            Button vissza = new Button();
+            vissza.Text = "Vissza";
+            vissza.Location = new Point(630, 330);
+            vissza.Size = new Size(90, 30);
+            vissza.Click += visszaButton_Click;
+            this.Controls.Add(vissza);
+
+            string filepath = "termelok.txt";
+            hozzaad.Tag = new { TextBox = textBox, FilePath = filepath };
+            List<string> lines = new List<string>();
+
+
+            using (StreamReader reader = new StreamReader(filepath))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    lines.Add(line);
+                }
+            }
+
+
+            foreach (var line in lines)
+            {
+                listBox.Items.Add(line);
+            }
+
+        }
         private void gyumolcsok_Click(object sender, EventArgs e)
         {
             clearButtons();
@@ -120,7 +170,62 @@ namespace Atvevohely
             }
 
         }
+        private void atvetel_Click(object sender, EventArgs e)
+        {
+            clearButtons();
+            Label text = new Label();
+            text.Text = "Átvétel";
+            text.Location = new Point(20, 20);
+            text.BackColor = Color.White;
+            text.Size = new Size(400, 100);
+            text.Font = new Font("Arial", 40, FontStyle.Bold);
+            this.Controls.Add(text);
 
+            ListBox listBox = new ListBox();
+            listBox.Location = new Point(520, 123);
+            listBox.Size = new Size(200, 200);
+            this.Controls.Add(listBox);
+
+            TextBox textBox = new TextBox();
+            textBox.Location = new Point(520, 60);
+            textBox.AutoSize = false;
+            textBox.Size = new Size(100, 28);
+            this.Controls.Add(textBox);
+
+            Button hozzaad = new Button();
+            hozzaad.Location = new Point(630, 59);
+            hozzaad.Size = new Size(90, 30);
+            hozzaad.Text = "Hozzáadás";
+            hozzaad.Click += hozzaad_Click;
+            this.Controls.Add(hozzaad);
+
+            Button vissza = new Button();
+            vissza.Text = "Vissza";
+            vissza.Location = new Point(630, 330);
+            vissza.Size = new Size(90, 30);
+            vissza.Click += visszaButton_Click;
+            this.Controls.Add(vissza);
+
+            string filepath = "atvetelek.txt";
+            hozzaad.Tag = new { TextBox = textBox, FilePath = filepath };
+            List<string> lines = new List<string>();
+
+
+            using (StreamReader reader = new StreamReader(filepath))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    lines.Add(line);
+                }
+            }
+
+
+            foreach (var line in lines)
+            {
+                listBox.Items.Add(line);
+            }
+        }
         private void hozzaad_Click(object sender, EventArgs e)
         {
             Button button = sender as Button;
@@ -171,12 +276,6 @@ namespace Atvevohely
         private void visszaButton_Click(object sender, EventArgs e)
         {
             start(); 
-        }
-
-
-        private void atvetel_Click(object sender, EventArgs e)
-        {
-            clearButtons();
         }
     }
 }
