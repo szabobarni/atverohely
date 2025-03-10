@@ -18,3 +18,13 @@ D:\Szabo Barnabas 11.i\atverohely\Atvevohely\Atvevohely\obj\Debug\Atvevohely.csp
 D:\Szabo Barnabas 11.i\atverohely\Atvevohely\Atvevohely\obj\Debug\Atvevohely.csproj.CoreCompileInputs.cache
 D:\Szabo Barnabas 11.i\atverohely\Atvevohely\Atvevohely\obj\Debug\Atvevohely.exe
 D:\Szabo Barnabas 11.i\atverohely\Atvevohely\Atvevohely\obj\Debug\Atvevohely.pdb
+C:\Users\3111TAN-17.TANUZEM\Desktop\atverohely-main\Atvevohely\Atvevohely\bin\Debug\Atvevohely.exe.config
+C:\Users\3111TAN-17.TANUZEM\Desktop\atverohely-main\Atvevohely\Atvevohely\bin\Debug\Atvevohely.exe
+C:\Users\3111TAN-17.TANUZEM\Desktop\atverohely-main\Atvevohely\Atvevohely\bin\Debug\Atvevohely.pdb
+C:\Users\3111TAN-17.TANUZEM\Desktop\atverohely-main\Atvevohely\Atvevohely\obj\Debug\Atvevohely.csproj.AssemblyReference.cache
+C:\Users\3111TAN-17.TANUZEM\Desktop\atverohely-main\Atvevohely\Atvevohely\obj\Debug\Atvevohely.Form1.resources
+C:\Users\3111TAN-17.TANUZEM\Desktop\atverohely-main\Atvevohely\Atvevohely\obj\Debug\Atvevohely.Properties.Resources.resources
+C:\Users\3111TAN-17.TANUZEM\Desktop\atverohely-main\Atvevohely\Atvevohely\obj\Debug\Atvevohely.csproj.GenerateResource.cache
+C:\Users\3111TAN-17.TANUZEM\Desktop\atverohely-main\Atvevohely\Atvevohely\obj\Debug\Atvevohely.csproj.CoreCompileInputs.cache
+C:\Users\3111TAN-17.TANUZEM\Desktop\atverohely-main\Atvevohely\Atvevohely\obj\Debug\Atvevohely.exe
+C:\Users\3111TAN-17.TANUZEM\Desktop\atverohely-main\Atvevohely\Atvevohely\obj\Debug\Atvevohely.pdb

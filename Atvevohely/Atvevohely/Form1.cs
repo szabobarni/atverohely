@@ -72,17 +72,11 @@ namespace Atvevohely
             listBox.Size = new Size(200, 200);
             this.Controls.Add(listBox);
 
-            TextBox textBox = new TextBox();
-            textBox.Location = new Point(520, 60);
-            textBox.AutoSize = false;
-            textBox.Size = new Size(100, 28);
-            this.Controls.Add(textBox);
-
             Button hozzaad = new Button();
-            hozzaad.Location = new Point(630, 59);
+            hozzaad.Location = new Point(520, 330);
             hozzaad.Size = new Size(90, 30);
             hozzaad.Text = "Hozzáadás";
-            hozzaad.Click += hozzaad_Click;
+            hozzaad.Click += new_termelo;
             this.Controls.Add(hozzaad);
 
             Button vissza = new Button();
@@ -92,12 +86,9 @@ namespace Atvevohely
             vissza.Click += visszaButton_Click;
             this.Controls.Add(vissza);
 
-            string filepath = "termelok.txt";
-            hozzaad.Tag = new { TextBox = textBox, FilePath = filepath };
             List<string> lines = new List<string>();
 
-
-            using (StreamReader reader = new StreamReader(filepath))
+            using (StreamReader reader = new StreamReader("termelok.txt"))
             {
                 string line;
                 while ((line = reader.ReadLine()) != null)
@@ -111,6 +102,8 @@ namespace Atvevohely
             {
                 listBox.Items.Add(line);
             }
+
+
 
         }
         private void gyumolcsok_Click(object sender, EventArgs e)
@@ -276,6 +269,139 @@ namespace Atvevohely
         private void visszaButton_Click(object sender, EventArgs e)
         {
             start(); 
+        }
+        private void new_termelo(object sender, EventArgs e)
+        {
+            clearButtons();
+
+            Label text = new Label();
+            text.Text = "Új termelő";
+            text.Location = new Point(20, 20);
+            text.BackColor = Color.White;
+            text.Size = new Size(400, 100);
+            text.Font = new Font("Arial", 40, FontStyle.Bold);
+            this.Controls.Add(text);
+
+            Label name = new Label();
+            name.Text = "Teljes név: ";
+            name.Location = new Point(350, 120);
+            name.BackColor = Color.White;
+            name.Size = new Size(75, 15);
+            name.Font = new Font("Arial", 10);
+            this.Controls.Add(name);
+
+            TextBox name_text = new TextBox();
+            name_text.Location = new Point(465, 120);
+            name_text.AutoSize = false;
+            name_text.Size = new Size(100, 15);
+            this.Controls.Add(name_text);
+
+            Label lakcim = new Label();
+            lakcim.Text = "Lakcím: ";
+            lakcim.Location = new Point(350, 140);
+            lakcim.BackColor = Color.White;
+            lakcim.Size = new Size(75, 15);
+            lakcim.Font = new Font("Arial", 10);
+            this.Controls.Add(lakcim);
+
+            TextBox lakcim_text = new TextBox();
+            lakcim_text.Location = new Point(465, 140);
+            lakcim_text.AutoSize = false;
+            lakcim_text.Size = new Size(100, 15);
+            this.Controls.Add(lakcim_text);
+
+            Label telefonszam = new Label();
+            telefonszam.Text = "Telefonszám:";
+            telefonszam.Location = new Point(350, 160);
+            telefonszam.BackColor = Color.White;
+            telefonszam.Size = new Size(90, 15);
+            telefonszam.Font = new Font("Arial", 10);
+            this.Controls.Add(telefonszam);
+
+            TextBox telefonszam_text = new TextBox();
+            telefonszam_text.Location = new Point(465, 160);
+            telefonszam_text.AutoSize = false;
+            telefonszam_text.Size = new Size(100, 15);
+            this.Controls.Add(telefonszam_text);
+
+            Label adoazonosito = new Label();
+            adoazonosito.Text = "Adóazonosító: ";
+            adoazonosito.Location = new Point(350, 180);
+            adoazonosito.BackColor = Color.White;
+            adoazonosito.Size = new Size(98, 15);
+            adoazonosito.Font = new Font("Arial", 10);
+            this.Controls.Add(adoazonosito);
+
+            TextBox adoazonosito_text = new TextBox();
+            adoazonosito_text.Location = new Point(465, 180);
+            adoazonosito_text.AutoSize = false;
+            adoazonosito_text.Size = new Size(100, 15);
+            this.Controls.Add(adoazonosito_text);
+
+            Button save = new Button();
+            save.Text = "Mentés";
+            save.Location = new Point(350, 200);
+            save.Size = new Size(80, 25);
+            save.AutoSize = false;
+            save.Click += termeloHozzaad;
+            save.Click += termelok_Click;
+            this.Controls.Add(save);
+
+            save.Tag = new { Name = name_text, Lakcim = lakcim_text, Telefonszam = telefonszam_text, Adoazonosito = adoazonosito_text};
+        }
+        private void termeloHozzaad(object sender, EventArgs e) 
+        {
+            Button button = sender as Button;
+            var buttonInfo = button.Tag as dynamic;
+
+            string filepath = "termelok.txt";
+            string name = buttonInfo.Name.Text;
+            string lakcim = buttonInfo.Lakcim.Text;
+            string telefonszam = buttonInfo.Telefonszam.Text;
+            string adoazonosito = buttonInfo.Adoazonosito.Text;
+
+            try
+            {
+                if (!File.Exists(filepath))
+                {
+                    File.Create(filepath).Close();
+                }
+
+                using (StreamWriter sw = new StreamWriter(filepath, true))
+                {
+                    sw.WriteLine($"{name};{lakcim};{telefonszam};{adoazonosito}");
+                }
+                ListBox listBox = this.Controls.OfType<ListBox>().FirstOrDefault();
+                if (listBox != null)
+                {
+                    listBox.Items.Clear();
+
+                    List<string> lines = new List<string>();
+                    using (StreamReader reader = new StreamReader(filepath))
+                    {
+                        string line;
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            lines.Add(line);
+                        }
+                    }
+
+
+                    foreach (var line in lines)
+                    {
+                        listBox.Items.Add(line);
+                    }
+                }
+                MessageBox.Show("Sikeresen hozzáadva. ");
+                
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+
+            
+            
         }
     }
 }
