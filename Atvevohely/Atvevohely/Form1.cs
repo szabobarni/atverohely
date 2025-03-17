@@ -14,6 +14,14 @@ namespace Atvevohely
 {
     public partial class Form1 : Form
     {
+        public string result;
+
+        class Adatok
+        {
+            public string nev, lakcim, id;
+            public int telefonszam, adoazonosito;
+        }
+
         public Form1()
         {
             InitializeComponent();
@@ -84,7 +92,9 @@ namespace Atvevohely
             vissza.Location = new Point(630, 330);
             vissza.Size = new Size(90, 30);
             vissza.Click += visszaButton_Click;
-            this.Controls.Add(vissza);
+            this.Controls.Add(vissza);    
+
+            
 
             List<string> lines = new List<string>();
 
@@ -204,20 +214,65 @@ namespace Atvevohely
             List<string> lines = new List<string>();
 
 
-            using (StreamReader reader = new StreamReader(filepath))
+            //GYÜMÖLCSÖK
+            ComboBox gyumolcsLenyilo = new ComboBox();
+            gyumolcsLenyilo.Text = "Gyümölcsök";
+            gyumolcsLenyilo.Location = new Point(600, 400);
+            this.Controls.Add(gyumolcsLenyilo);
+
+            string fruits = "fruits.txt";
+            List<string> gyumolcs_adatok = new List<string>();
+
+
+            using (StreamReader reader = new StreamReader(fruits))
             {
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    lines.Add(line);
+                    gyumolcs_adatok.Add(line);
                 }
             }
 
 
-            foreach (var line in lines)
+            foreach (var line in gyumolcs_adatok)
             {
-                listBox.Items.Add(line);
+                gyumolcsLenyilo.Items.Add(line);
             }
+
+            //TERMELŐK
+            ComboBox termelokLenyilo = new ComboBox();
+            termelokLenyilo.Text = "Termelők";
+            termelokLenyilo.Location = new Point(450, 400);
+            this.Controls.Add(termelokLenyilo);
+
+            string termelok = "termelok.txt";
+            List<Adatok> termelok_adatok = new List<Adatok>();
+
+
+            using (StreamReader reader = new StreamReader(termelok))
+            {
+                
+                while (!reader.EndOfStream)
+                {
+                    string sor = reader.ReadLine();
+                    string[] sorok = sor.Split(';');
+                    Adatok sv = new Adatok();
+                    sv.nev = sorok[0];
+                    sv.lakcim = sorok[1];
+                    sv.telefonszam = int.Parse(sorok[2]);
+                    sv.adoazonosito = int.Parse(sorok[3]);
+                    sv.id = sorok[4];
+                    termelok_adatok.Add(sv);
+                }
+            }
+           
+
+
+            foreach (var line in termelok_adatok)
+            {
+                termelokLenyilo.Items.Add(termelok_adatok[0]);
+            }
+
         }
         private void hozzaad_Click(object sender, EventArgs e)
         {
@@ -347,7 +402,17 @@ namespace Atvevohely
             save.Click += termelok_Click;
             this.Controls.Add(save);
 
-            save.Tag = new { Name = name_text, Lakcim = lakcim_text, Telefonszam = telefonszam_text, Adoazonosito = adoazonosito_text};
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+            Random random = new Random();
+
+            for (int i = 0; i < 5; i++)
+            {
+                result += (chars[random.Next(chars.Length)]).ToString();
+            }
+
+            save.Tag = new { Name = name_text, Lakcim = lakcim_text, Telefonszam = telefonszam_text, Adoazonosito = adoazonosito_text, Result = result};
+            result = "";
         }
         private void termeloHozzaad(object sender, EventArgs e) 
         {
@@ -359,6 +424,7 @@ namespace Atvevohely
             string lakcim = buttonInfo.Lakcim.Text;
             string telefonszam = buttonInfo.Telefonszam.Text;
             string adoazonosito = buttonInfo.Adoazonosito.Text;
+            string result = buttonInfo.Result;
 
             try
             {
@@ -369,7 +435,7 @@ namespace Atvevohely
 
                 using (StreamWriter sw = new StreamWriter(filepath, true))
                 {
-                    sw.WriteLine($"{name};{lakcim};{telefonszam};{adoazonosito}");
+                    sw.WriteLine($"{name};{lakcim};{telefonszam};{adoazonosito};{result}");
                 }
                 ListBox listBox = this.Controls.OfType<ListBox>().FirstOrDefault();
                 if (listBox != null)
