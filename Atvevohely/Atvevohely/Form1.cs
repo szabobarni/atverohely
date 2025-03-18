@@ -184,40 +184,75 @@ namespace Atvevohely
             text.Font = new Font("Arial", 40, FontStyle.Bold);
             this.Controls.Add(text);
 
+			//lista
             ListBox listBox = new ListBox();
-            listBox.Location = new Point(520, 123);
+            listBox.Location = new Point(580, 123);
             listBox.Size = new Size(200, 200);
             this.Controls.Add(listBox);
 
-            TextBox textBox = new TextBox();
-            textBox.Location = new Point(520, 60);
-            textBox.AutoSize = false;
-            textBox.Size = new Size(100, 28);
-            this.Controls.Add(textBox);
+			//NUMERIC UP DOWN szam
+            NumericUpDown darab = new NumericUpDown();
+			//darab.Value = 0;
+            darab.Location = new Point(390, 190);
+            darab.AutoSize = false;
+            darab.Size = new Size(100, 28);
+			darab.Minimum = 0;
+			darab.Maximum = 99999999999;
+            this.Controls.Add(darab);
 
-            Button hozzaad = new Button();
-            hozzaad.Location = new Point(630, 59);
+			DateTimePicker dtp = new DateTimePicker();
+			dtp.Format = DateTimePickerFormat.Short;
+			dtp.Width = 100;
+			dtp.Location = new Point(390,220);
+			this.Controls.Add(dtp);
+
+			//label db
+			Label db = new Label();
+			db.Text = "Kg";
+			db.Location = new Point(490, 192);
+			db.BackColor = Color.White;
+			db.Size = new Size(430, 100);
+			db.Font = new Font("Arial", 10, FontStyle.Bold);
+			this.Controls.Add(db);
+
+			//hozzaad
+			Button hozzaad = new Button();
+            hozzaad.Location = new Point(580, 330);
             hozzaad.Size = new Size(90, 30);
             hozzaad.Text = "Hozzáadás";
-            hozzaad.Click += hozzaad_Click;
+            hozzaad.Click += atvetelHozzaad;
             this.Controls.Add(hozzaad);
 
+			//vissza
             Button vissza = new Button();
             vissza.Text = "Vissza";
-            vissza.Location = new Point(630, 330);
+            vissza.Location = new Point(690, 330);
             vissza.Size = new Size(90, 30);
             vissza.Click += visszaButton_Click;
             this.Controls.Add(vissza);
 
-            string filepath = "atvetelek.txt";
-            hozzaad.Tag = new { TextBox = textBox, FilePath = filepath };
-            List<string> lines = new List<string>();
+			List<string> lines = new List<string>();
+
+			using (StreamReader reader = new StreamReader("atvetelek.txt"))
+			{
+				string line;
+				while ((line = reader.ReadLine()) != null)
+				{
+					lines.Add(line);
+				}
+			}
+
+
+			foreach (var line in lines)
+			{
+				listBox.Items.Add(line);
+			}
 
 
             //GYÜMÖLCSÖK
             ComboBox gyumolcsLenyilo = new ComboBox();
             gyumolcsLenyilo.Text = "Gyümölcsök";
-            gyumolcsLenyilo.Location = new Point(600, 400);
+            gyumolcsLenyilo.Location = new Point(390, 160);
             this.Controls.Add(gyumolcsLenyilo);
 
             string fruits = "fruits.txt";
@@ -242,7 +277,7 @@ namespace Atvevohely
             //TERMELŐK
             ComboBox termelokLenyilo = new ComboBox();
             termelokLenyilo.Text = "Termelők";
-            termelokLenyilo.Location = new Point(450, 400);
+            termelokLenyilo.Location = new Point(390, 130);
             this.Controls.Add(termelokLenyilo);
 
             string termelok = "termelok.txt";
@@ -265,15 +300,16 @@ namespace Atvevohely
                     termelok_adatok.Add(sv);
                 }
             }
-           
 
 
-            foreach (var line in termelok_adatok)
-            {
-                termelokLenyilo.Items.Add(termelok_adatok[0]);
-            }
 
-        }
+			for (int i = 0; i < termelok_adatok.Count; i++)
+			{
+				termelokLenyilo.Items.Add(termelok_adatok[i].nev);
+			}
+
+			hozzaad.Tag = new { Name = termelokLenyilo, Gyumolcs = gyumolcsLenyilo, Darab = darab , Ido = dtp};
+		}
         private void hozzaad_Click(object sender, EventArgs e)
         {
             Button button = sender as Button;
@@ -469,5 +505,58 @@ namespace Atvevohely
             
             
         }
+		private void atvetelHozzaad(object sender, EventArgs e)
+		{
+			string filepath = "atvetelek.txt";
+			Button button = sender as Button;
+			var buttonInfo = button.Tag as dynamic;
+
+
+			string name = buttonInfo.Name.SelectedItem;
+			string gyumolcs = buttonInfo.Gyumolcs.SelectedItem;
+			int db = (int)buttonInfo.Darab.Value;
+			string ido = buttonInfo.Ido.Value.ToString("yyyy-MM-dd");
+
+
+			try
+			{
+				if (!File.Exists(filepath))
+				{
+					File.Create(filepath).Close();
+				}
+
+				using (StreamWriter sw = new StreamWriter(filepath, true))
+				{
+					sw.WriteLine($"{name};{gyumolcs};{db};{ido}");
+				}
+				ListBox listBox = this.Controls.OfType<ListBox>().FirstOrDefault();
+				if (listBox != null)
+				{
+					listBox.Items.Clear();
+
+					List<string> lines = new List<string>();
+					using (StreamReader reader = new StreamReader(filepath))
+					{
+						string line;
+						while ((line = reader.ReadLine()) != null)
+						{
+							lines.Add(line);
+						}
+					}
+
+
+					foreach (var line in lines)
+					{
+						listBox.Items.Add(line);
+					}
+				}
+				MessageBox.Show("Sikeresen hozzáadva. ");
+
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show("Error: " + ex.Message);
+			}
+		}
     }
 }
