@@ -319,53 +319,7 @@ namespace Atvevohely
 
 			hozzaad.Tag = new { Name = termelokLenyilo, Gyumolcs = gyumolcsLenyilo, Darab = darab , Ido = dtp};
 		}
-        private void hozzaad_Click(object sender, EventArgs e)
-        {
-            Button button = sender as Button;
-            var buttonInfo = button.Tag as dynamic;
-
-            string filepath = buttonInfo.FilePath;
-            string text = buttonInfo.TextBox.Text;
-
-            try
-            {
-                if (!File.Exists(filepath))
-                {
-                    File.Create(filepath).Close();
-                }
-
-                using (StreamWriter sw = new StreamWriter(filepath, true)) 
-                {
-                    sw.WriteLine(text);
-                }
-                ListBox listBox = this.Controls.OfType<ListBox>().FirstOrDefault();
-                if (listBox != null)
-                {              
-                    listBox.Items.Clear();
-
-                    List<string> lines = new List<string>();
-                    using (StreamReader reader = new StreamReader(filepath))
-                    {
-                        string line;
-                        while ((line = reader.ReadLine()) != null)
-                        {
-                            lines.Add(line);
-                        }
-                    }
-
-
-                    foreach (var line in lines)
-                    {
-                        listBox.Items.Add(line);
-                    }
-                }
-                MessageBox.Show("Sikeresen hozzáadva. ");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error: " + ex.Message);
-            }
-        }
+        
         private void visszaButton_Click(object sender, EventArgs e)
         {
             start(); 
@@ -459,6 +413,55 @@ namespace Atvevohely
             save.Tag = new { Name = name_text, Lakcim = lakcim_text, Telefonszam = telefonszam_text, Adoazonosito = adoazonosito_text, Result = result};
             result = "";
         }
+
+        #region Hozzáadás
+        private void hozzaad_Click(object sender, EventArgs e)
+        {
+            Button button = sender as Button;
+            var buttonInfo = button.Tag as dynamic;
+
+            string filepath = buttonInfo.FilePath;
+            string text = buttonInfo.TextBox.Text;
+
+            try
+            {
+                if (!File.Exists(filepath))
+                {
+                    File.Create(filepath).Close();
+                }
+
+                using (StreamWriter sw = new StreamWriter(filepath, true)) 
+                {
+                    sw.WriteLine(text);
+                }
+                ListBox listBox = this.Controls.OfType<ListBox>().FirstOrDefault();
+                if (listBox != null)
+                {              
+                    listBox.Items.Clear();
+
+                    List<string> lines = new List<string>();
+                    using (StreamReader reader = new StreamReader(filepath))
+                    {
+                        string line;
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            lines.Add(line);
+                        }
+                    }
+
+
+                    foreach (var line in lines)
+                    {
+                        listBox.Items.Add(line);
+                    }
+                }
+                MessageBox.Show("Sikeresen hozzáadva. ");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+        }
         private void termeloHozzaad(object sender, EventArgs e) 
         {
             Button button = sender as Button;
@@ -514,7 +517,7 @@ namespace Atvevohely
             
             
         }
-		private void atvetelHozzaad(object sender, EventArgs e)
+        private void atvetelHozzaad(object sender, EventArgs e)
 		{
 			string filepath = "atvetelek.txt";
 			Button button = sender as Button;
@@ -567,56 +570,89 @@ namespace Atvevohely
 				MessageBox.Show("Error: " + ex.Message);
 			}
 		}
+        #endregion
 
+        #region Statisztika
+        private DateTimePicker nap;
+        private Dictionary<string, Label> fruitLabels = new Dictionary<string, Label>();
         private void statButton_click(object sender, EventArgs e)  
         {
             clearButtons();
 
             Button napi_bontas = new Button();
-            napi_bontas.Location = new Point(520, 330);
+            napi_bontas.Location = new Point(480, 100);
             napi_bontas.Size = new Size(90, 30);
             napi_bontas.Text = "Napi Bontás";
             napi_bontas.Click += napi_bontas_Click;
             this.Controls.Add(napi_bontas);
 
             Button adott_idoszak_fajta = new Button();
+            adott_idoszak_fajta.Location = new Point(480, 140);
+            adott_idoszak_fajta.Size = new Size(90, 30);
+            adott_idoszak_fajta.Text = "AI - Termelő";
+            adott_idoszak_fajta.Click += napi_bontas_Click;
+            this.Controls.Add(adott_idoszak_fajta);
 
             Button adott_idoszak_termelo = new Button();
+            adott_idoszak_termelo.Location = new Point(480, 180);
+            adott_idoszak_termelo.Size = new Size(90, 30);
+            adott_idoszak_termelo.Text = "AI - Fajta";
+            adott_idoszak_termelo.Click += napi_bontas_Click;
+            this.Controls.Add(adott_idoszak_termelo);
 
             Button termelo_stat = new Button();
+            termelo_stat.Location = new Point(480, 220);
+            termelo_stat.Size = new Size(90, 80);
+            termelo_stat.Text = "Termelő Tracker";
+            termelo_stat.Click += napi_bontas_Click;
+            this.Controls.Add(termelo_stat);
 
+
+            //lista
             ListBox lista = new ListBox();
-            lista.Location = new Point(520, 123);
-            lista.Size = new Size(200, 200);
+            lista.Location = new Point(580, 100);
+            lista.Size = new Size(200, 300);
             this.Controls.Add(lista);
         }
 
+        #region Napi Bontás
         private void napi_bontas_Click(object sender, EventArgs e)
         {
             clearButtons();
 
-            DateTimePicker nap = new DateTimePicker();
+            Label text = new Label();
+            text.Text = "Napi bontás";
+            text.Location = new Point(20, 20);
+            text.BackColor = Color.White;
+            text.Size = new Size(400, 100);
+            text.Font = new Font("Arial", 40, FontStyle.Bold);
+            this.Controls.Add(text);
+
+
+            nap = new DateTimePicker();
             nap.Format = DateTimePickerFormat.Short;
             nap.Width = 100;
-            nap.Location = new Point(390, 220);
+            nap.Location = new Point(560, 55);
+            nap.ValueChanged += napvaltozas;
             this.Controls.Add(nap);
 
-            string fruits = "fruits.txt";
-            List<string> gyumolcs_adatok = new List<string>();
+            Button vissza = new Button();
+            vissza.Text = "Vissza";
+            vissza.Location = new Point(690, 330);
+            vissza.Size = new Size(90, 30);
+            vissza.Click += statButton_click;
+            this.Controls.Add(vissza);
 
-
-            using (StreamReader reader = new StreamReader(fruits))
-            {
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    gyumolcs_adatok.Add(line);
-                }
-            }
-
+            napiFrissit();
+        }
+        private void napvaltozas(object sender, EventArgs e)
+        {
+            napiFrissit();
+        }
+        private void napiFrissit()
+        {
             string atvetel = "atvetelek.txt";
             List<Adatok> atvetel_adatok = new List<Adatok>();
-
 
             using (StreamReader reader = new StreamReader(atvetel))
             {
@@ -633,19 +669,46 @@ namespace Atvevohely
                 }
             }
 
-            int kg = 0;
-            for (int i = 0; i < atvetel_adatok.Count(); i++)
+            var fruitTotals = atvetel_adatok
+                .Where(a => a.ido.Date == nap.Value.Date)
+                .GroupBy(a => a.gyumolcs)
+                .ToDictionary(g => g.Key, g => g.Sum(a => a.mennyiseg));
+
+            int startY = 130;
+
+            foreach (var label in fruitLabels.Values)
             {
-                if (atvetel_adatok[i].ido == nap.Value)
-                {
-                    kg = 7;
-                }
+                this.Controls.Remove(label);
             }
+            fruitLabels.Clear();
 
+            Label text = new Label();
+            text.Text = "Gyümölcsök";
+            text.Location = new Point(520, 85);
+            text.BackColor = Color.White;
+            text.Size = new Size(400, 30);
+            text.Font = new Font("Arial", 20, FontStyle.Bold);
+            this.Controls.Add(text);
 
-            Label mennyiseg = new Label();
-            mennyiseg.Text = Convert.ToString(kg);
-            this.Controls.Add(mennyiseg);
+            foreach (var kvp in fruitTotals)
+            {
+                Label fruitLabel = new Label();
+                fruitLabel.Text = $"{kvp.Key}: {kvp.Value} kg";
+                fruitLabel.Location = new Point(550, startY);
+                startY += 40;
+                fruitLabel.Font = new Font("Arial", 15, FontStyle.Bold);
+                fruitLabel.Size = new Size(150,25);
+
+                this.Controls.Add(fruitLabel);
+                fruitLabels[kvp.Key] = fruitLabel;
+            }
         }
+        #endregion
+
+        #region asd
+        #endregion 
+
+        #endregion
     }
 }
+            
