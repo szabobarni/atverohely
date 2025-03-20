@@ -1,0 +1,10 @@
+csicska
+100
+100
+7
+Ci;Körte;12
+Ci;KúróFrissesség;24
+;;9;YYYY-03-DD
+;;0;2025-03-18
+csgo;KúróGyümölcs;15;1989-01-09
+Ci;KúróFrissesség;8;2025-03-20
