@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Atvevohely
 {
@@ -580,39 +581,42 @@ namespace Atvevohely
             clearButtons();
 
             Button napi_bontas = new Button();
-            napi_bontas.Location = new Point(480, 100);
+            napi_bontas.Location = new Point(530, 100);
             napi_bontas.Size = new Size(90, 30);
             napi_bontas.Text = "Napi Bontás";
             napi_bontas.Click += napi_bontas_Click;
             this.Controls.Add(napi_bontas);
 
             Button adott_idoszak_fajta = new Button();
-            adott_idoszak_fajta.Location = new Point(480, 140);
+            adott_idoszak_fajta.Location = new Point(530, 140);
             adott_idoszak_fajta.Size = new Size(90, 30);
-            adott_idoszak_fajta.Text = "AI - Termelő";
+            adott_idoszak_fajta.Text = "AI - Fajta";
             adott_idoszak_fajta.Click += napi_bontas_Click;
             this.Controls.Add(adott_idoszak_fajta);
 
             Button adott_idoszak_termelo = new Button();
-            adott_idoszak_termelo.Location = new Point(480, 180);
+            adott_idoszak_termelo.Location = new Point(530, 180);
             adott_idoszak_termelo.Size = new Size(90, 30);
-            adott_idoszak_termelo.Text = "AI - Fajta";
+            adott_idoszak_termelo.Text = "AI - Termelő";
             adott_idoszak_termelo.Click += napi_bontas_Click;
             this.Controls.Add(adott_idoszak_termelo);
 
             Button termelo_stat = new Button();
-            termelo_stat.Location = new Point(480, 220);
+            termelo_stat.Location = new Point(650, 100);
             termelo_stat.Size = new Size(90, 80);
             termelo_stat.Text = "Termelő Tracker";
             termelo_stat.Click += napi_bontas_Click;
             this.Controls.Add(termelo_stat);
 
+            Button vissza = new Button();
+            vissza.Text = "Vissza";
+            vissza.Location = new Point(600, 320);
+            vissza.Size = new Size(90, 30);
+            vissza.Click += atvetel_Click;
+            this.Controls.Add(vissza);
 
-            //lista
-            ListBox lista = new ListBox();
-            lista.Location = new Point(580, 100);
-            lista.Size = new Size(200, 300);
-            this.Controls.Add(lista);
+            napiMax();
+            napiAtlag();
         }
 
         #region Napi Bontás
@@ -705,7 +709,92 @@ namespace Atvevohely
         }
         #endregion
 
-        #region asd
+        #region Napi átlag,max
+        private void napiMax()
+        {
+            string atvetel = "atvetelek.txt";
+            List<Adatok> atvetel_adatok = new List<Adatok>();
+
+            using (StreamReader reader = new StreamReader(atvetel))
+            {
+                string sor;
+                while ((sor = reader.ReadLine()) != null)
+                {
+                    string[] sorok = sor.Split(';');
+                    Adatok sv = new Adatok();
+                    sv.nev = sorok[0];
+                    sv.gyumolcs = sorok[1];
+                    sv.mennyiseg = int.Parse(sorok[2]);
+                    sv.ido = DateTime.Parse(sorok[3]);
+                    atvetel_adatok.Add(sv);
+                }
+            }
+
+            var dayTotals = atvetel_adatok
+                .GroupBy(a => a.ido.Date)
+                .ToDictionary(g => g.Key, g => g.Sum(a => a.mennyiseg));
+
+            var maxDay = dayTotals.OrderByDescending(d => d.Value).First();
+
+            Label max = new Label();
+            max.Text = "Ezen a napon adták át a legtöbb gyümölcsöt: "+maxDay.Key.ToShortDateString();
+            max.Size = new Size(250, 50);
+            max.Font = new Font("Arial", 10, FontStyle.Bold);
+            max.Location = new Point(530, 230);
+            this.Controls.Add(max);
+        }
+        private void napiAtlag()
+        {
+            string atvetel = "atvetelek.txt";
+            List<Adatok> atvetel_adatok = new List<Adatok>();
+
+            using (StreamReader reader = new StreamReader(atvetel))
+            {
+                string sor;
+                while ((sor = reader.ReadLine()) != null)
+                {
+                    string[] sorok = sor.Split(';');
+                    Adatok sv = new Adatok();
+                    sv.nev = sorok[0];
+                    sv.gyumolcs = sorok[1];
+                    sv.mennyiseg = int.Parse(sorok[2]);
+                    sv.ido = DateTime.Parse(sorok[3]);
+                    atvetel_adatok.Add(sv);
+                }
+            }
+
+            Dictionary<DateTime, int> dayTotals = new Dictionary<DateTime, int>();
+
+            foreach (Adatok adat in atvetel_adatok)
+            {
+                DateTime date = adat.ido.Date;
+                if (dayTotals.ContainsKey(date))
+                {
+                    dayTotals[date] += adat.mennyiseg;
+                }
+                else
+                {
+                    dayTotals[date] = adat.mennyiseg;
+                }
+            }
+
+            Label atlag = new Label();
+            atlag.Size = new Size(250, 50);
+            atlag.Font = new Font("Arial", 10, FontStyle.Bold);
+            atlag.Location = new Point(530, 280);
+
+
+             double totalSum = 0;
+             foreach (int total in dayTotals.Values)
+             {
+                 totalSum += total;
+             }
+
+             double average = totalSum / dayTotals.Count;
+            atlag.Text = $"A napi átlag: {average:F2} kg.";
+            this.Controls.Add(atlag);
+        }
+
         #endregion 
 
         #endregion
