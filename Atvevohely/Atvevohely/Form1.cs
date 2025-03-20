@@ -18,8 +18,9 @@ namespace Atvevohely
 
         class Adatok
         {
-            public string nev, lakcim, id;
-            public int telefonszam, adoazonosito;
+            public string nev, lakcim, id, gyumolcs;
+            public int telefonszam, adoazonosito,mennyiseg;
+            public DateTime ido;
         }
 
         public Form1()
@@ -231,7 +232,15 @@ namespace Atvevohely
             vissza.Click += visszaButton_Click;
             this.Controls.Add(vissza);
 
-			List<string> lines = new List<string>();
+            //statisztika
+            Button stat = new Button();
+            stat.Text = "Statisztika";
+            stat.Location = new Point(580, 370);
+            stat.Size = new Size(200, 30);
+            stat.Click += statButton_click;
+            this.Controls.Add(stat);
+
+            List<string> lines = new List<string>();
 
 			using (StreamReader reader = new StreamReader("atvetelek.txt"))
 			{
@@ -515,7 +524,7 @@ namespace Atvevohely
 			string name = buttonInfo.Name.SelectedItem;
 			string gyumolcs = buttonInfo.Gyumolcs.SelectedItem;
 			int db = (int)buttonInfo.Darab.Value;
-			string ido = buttonInfo.Ido.Value.ToString("yyyy-MM-dd");
+			string ido = buttonInfo.Ido.Value.ToString("dd/MM/yyyy");
 
 
 			try
@@ -558,5 +567,85 @@ namespace Atvevohely
 				MessageBox.Show("Error: " + ex.Message);
 			}
 		}
+
+        private void statButton_click(object sender, EventArgs e)  
+        {
+            clearButtons();
+
+            Button napi_bontas = new Button();
+            napi_bontas.Location = new Point(520, 330);
+            napi_bontas.Size = new Size(90, 30);
+            napi_bontas.Text = "Napi Bontás";
+            napi_bontas.Click += napi_bontas_Click;
+            this.Controls.Add(napi_bontas);
+
+            Button adott_idoszak_fajta = new Button();
+
+            Button adott_idoszak_termelo = new Button();
+
+            Button termelo_stat = new Button();
+
+            ListBox lista = new ListBox();
+            lista.Location = new Point(520, 123);
+            lista.Size = new Size(200, 200);
+            this.Controls.Add(lista);
+        }
+
+        private void napi_bontas_Click(object sender, EventArgs e)
+        {
+            clearButtons();
+
+            DateTimePicker nap = new DateTimePicker();
+            nap.Format = DateTimePickerFormat.Short;
+            nap.Width = 100;
+            nap.Location = new Point(390, 220);
+            this.Controls.Add(nap);
+
+            string fruits = "fruits.txt";
+            List<string> gyumolcs_adatok = new List<string>();
+
+
+            using (StreamReader reader = new StreamReader(fruits))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    gyumolcs_adatok.Add(line);
+                }
+            }
+
+            string atvetel = "atvetelek.txt";
+            List<Adatok> atvetel_adatok = new List<Adatok>();
+
+
+            using (StreamReader reader = new StreamReader(atvetel))
+            {
+                string sor;
+                while ((sor = reader.ReadLine()) != null)
+                {
+                    string[] sorok = sor.Split(';');
+                    Adatok sv = new Adatok();
+                    sv.nev = sorok[0];
+                    sv.gyumolcs = sorok[1];
+                    sv.mennyiseg = int.Parse(sorok[2]);
+                    sv.ido = DateTime.Parse(sorok[3]);
+                    atvetel_adatok.Add(sv);
+                }
+            }
+
+            int kg = 0;
+            for (int i = 0; i < atvetel_adatok.Count(); i++)
+            {
+                if (atvetel_adatok[i].ido == nap.Value)
+                {
+                    kg = 7;
+                }
+            }
+
+
+            Label mennyiseg = new Label();
+            mennyiseg.Text = Convert.ToString(kg);
+            this.Controls.Add(mennyiseg);
+        }
     }
 }
